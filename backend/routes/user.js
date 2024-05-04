@@ -6,7 +6,7 @@ const JWT_SECRET = require("../config");
 
 const uRouter=express.Router();
 const userSchema=zod.object({
-    username:zod.string().min(3).max(30).trim().toLowerCase(),
+    username:zod.string().min(3).max(30).trim().email().toLowerCase(),
     password:zod.string().min(6),
     firstname:zod.string(),
     lastname:zod.string()
