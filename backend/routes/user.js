@@ -31,6 +31,7 @@ uRouter.post("/signup",async(req,res)=>{
         message:"Invalid Input!!!"
     })
 }
+
     
     const existingUser=await Users.findOne({username: loginInfo.username})
     if(existingUser._id){
@@ -49,6 +50,35 @@ uRouter.post("/signup",async(req,res)=>{
         msg:"User Created Succesfully",
         token
     })
+
+
+})
+const signinZod=zod.object({
+    username:zod.string().email(),
+    password:zod.string().min(3).max(30),
+
+})
+
+
+uRouter.post("signin",async(req,res)=>{
+    const {success}=safeParse(req.body)
+    if(!success){
+        res.status(411).json({
+            msg:"Invalid Input"
+        })
+    }
+     const user=await Users.findOne({
+        username:req.body.username,
+        password:req.body.password
+        
+     })
+     if(!user){
+        res.status(404).json({msg:"User Not Found!"});
+     }
+     const token=jwt.sign({userId:user._id},JWT_SECRET)
+     res.json({
+        token
+     })
 
 
 })
