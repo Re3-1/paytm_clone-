@@ -3,7 +3,7 @@ const JWT_SECRET = require("./config");
 
 function authMiddleware(req,res,next){
     const aut=req.headers.authorization;
-    if(!aut||!aut.startsWith("Beare ")){
+    if(!aut||!aut.startsWith("Bearer ")){
         res.status(403).json({
             msg:"Invalid Authorization"
         })
@@ -22,6 +22,5 @@ function authMiddleware(req,res,next){
 
 
 }
-module.export={
-    authMiddleware
-}
+module.exports={ authMiddleware}
+   

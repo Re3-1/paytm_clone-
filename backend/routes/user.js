@@ -1,10 +1,19 @@
 const express=require("express")
 const zod=require("zod");
 const jwt=require("jsonwebtoken")
+const  { authMiddleware }= require("../middlewares")
 const { Users } = require("../db");
 const JWT_SECRET = require("../config");
 
 const uRouter=express.Router();
+
+uRouter.user(express.json())
+const updateBody=zod.object({
+username:zod.string().optional(),
+firstname:zod.string().optional(),
+lastname:zod.string().optional()
+
+})
 const userSchema=zod.object({
     username:zod.string().min(3).max(30).trim().email().toLowerCase(),
     password:zod.string().min(6),
@@ -45,5 +54,45 @@ uRouter.post("/Signup",async(req,res)=>{
 })
 
 
-uRouter.get("");
+uRouter.put("/",authMiddleware,async(req, res)=>{
+        try{
+            updateBody.safeParse(req.body);
+            
+        }catch(err){
+            res.status(411).json({
+                msg:"Wrong Inputs"
+            })
+        }
+        const {userId}=req;
+     
+        Users.updateOne(req.body,{
+            id:userId
+        })
+
+        res.json({msg:"Updated Successfully"})
+});
+
+
+uRouter.get("/bulk",authMiddleware,async(req,res)=>{
+        const param=req.query.filter;
+        try{
+            const allSimilar=await Users.find({
+            $or:[{firstname:{"$regex":param}},{lastname:{"$regex":param}}]  })
+            res.json({
+                user:allSimilar.map(user=>({
+                    username:user.username,
+                    firstname:user.firstname,
+                    lastname:user.lastname,
+                    _id:user.id
+                }))
+            })
+            
+    
+    }catch(err){
+            res.json({msg:"Something Went Wrong!"})
+        }
+       
+      
+       
+})
 module.exports=uRouter;
