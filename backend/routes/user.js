@@ -22,7 +22,7 @@ const userSchema=zod.object({
 
 })
 
-uRouter.post("/Signup",async(req,res)=>{
+uRouter.post("/signup",async(req,res)=>{
     const loginInfo=req.body;
     try{
     userSchema.parse(loginInfo)
