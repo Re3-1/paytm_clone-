@@ -7,7 +7,7 @@ const JWT_SECRET = require("../config");
 
 const uRouter=express.Router();
 
-uRouter.user(express.json())
+uRouter.use(express.json())
 const updateBody=zod.object({
 username:zod.string().optional(),
 firstname:zod.string().optional(),
@@ -34,13 +34,19 @@ uRouter.post("/signup",async(req,res)=>{
 
     
     const existingUser=await Users.findOne({username: loginInfo.username})
-    if(existingUser._id){
+    if(existingUser){
             
            return  res.json({
                 msg:"Username Already taken!!"
             })
 
     }
+    const dbUser=await Users.create({
+        username:loginInfo.username,
+    password:loginInfo.password,
+    firstname:loginInfo.firstname,
+    lastname:loginInfo.lastname
+    })
     
     const token=jwt.sign({
         userId:dbUser._id

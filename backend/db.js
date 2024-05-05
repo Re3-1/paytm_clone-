@@ -39,7 +39,7 @@ const Users=mongoose.model("Users",userSchema)
 
 const accountSchema=new mongoose.Schema({
     userId:{
-        type:mongoose.Schema.Types.ObjestId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"Users",
         required:true
     },
