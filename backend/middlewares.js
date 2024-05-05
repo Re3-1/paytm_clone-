@@ -4,7 +4,7 @@ const JWT_SECRET = require("./config");
 function authMiddleware(req,res,next){
     const aut=req.headers.authorization;
     if(!aut||!aut.startsWith("Bearer ")){
-        res.status(403).json({
+        return res.status(403).json({
             msg:"Invalid Authorization"
         })
     }
@@ -16,7 +16,7 @@ function authMiddleware(req,res,next){
         req.userID=user.Id;
         next();
     }catch(err){
-        res.status(403).json({Msg:"INVALID TOKEN!!"})
+        return res.status(403).json({Msg:"INVALID TOKEN!!"})
 
     }
 

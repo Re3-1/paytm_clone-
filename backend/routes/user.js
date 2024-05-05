@@ -2,7 +2,7 @@ const express=require("express")
 const zod=require("zod");
 const jwt=require("jsonwebtoken")
 const  { authMiddleware }= require("../middlewares")
-const { Users } = require("../db");
+const { Users, Account } = require("../db");
 const JWT_SECRET = require("../config");
 
 const uRouter=express.Router();
@@ -27,7 +27,7 @@ uRouter.post("/signup",async(req,res)=>{
     try{
     userSchema.parse(loginInfo)
 }catch(err){
-    res.json({
+     return res.json({
         message:"Invalid Input!!!"
     })
 }
@@ -36,7 +36,7 @@ uRouter.post("/signup",async(req,res)=>{
     const existingUser=await Users.findOne({username: loginInfo.username})
     if(existingUser._id){
             
-            res.json({
+           return  res.json({
                 msg:"Username Already taken!!"
             })
 
@@ -45,6 +45,12 @@ uRouter.post("/signup",async(req,res)=>{
     const token=jwt.sign({
         userId:dbUser._id
     },JWT_SECRET)
+
+    await Account.create(
+       { userId:dbUser._id,
+        balance:1+Math.random()*1000
+    }
+    )
 
     res.json({
         msg:"User Created Succesfully",
@@ -61,9 +67,9 @@ const signinZod=zod.object({
 
 
 uRouter.post("signin",async(req,res)=>{
-    const {success}=safeParse(req.body)
+    const {success}=signinZod.safeParse(req.body)
     if(!success){
-        res.status(411).json({
+        return res.status(411).json({
             msg:"Invalid Input"
         })
     }
@@ -73,7 +79,7 @@ uRouter.post("signin",async(req,res)=>{
         
      })
      if(!user){
-        res.status(404).json({msg:"User Not Found!"});
+        return res.status(404).json({msg:"User Not Found!"});
      }
      const token=jwt.sign({userId:user._id},JWT_SECRET)
      res.json({
@@ -89,7 +95,7 @@ uRouter.put("/",authMiddleware,async(req, res)=>{
             updateBody.safeParse(req.body);
             
         }catch(err){
-            res.status(411).json({
+            return res.status(411).json({
                 msg:"Wrong Inputs"
             })
         }

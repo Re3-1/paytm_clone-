@@ -1,6 +1,6 @@
 const mongoose=require("mongoose")
 mongoose.connect("mongodb+srv://ankitrawatre1:ankitre1@cluster0.llkynm4.mongodb.net/paytmApp");
-const userSchema=mongoose.Schema({
+const userSchema=new mongoose.Schema({
     username:{
         type:String,
         required:true,
@@ -28,7 +28,35 @@ const userSchema=mongoose.Schema({
 
     }
 })
+
+
+
+
 const Users=mongoose.model("Users",userSchema)
+
+
+
+
+const accountSchema=new mongoose.Schema({
+    userId:{
+        type:mongoose.Schema.Types.ObjestId,
+        ref:"Users",
+        required:true
+    },
+    balance:{
+        type:Number,
+        required:true,
+    }
+
+})
+
+
+
+
+const Account=mongoose.model("Account",accountSchema)
+
+
+
 module.exports={
-    Users
+    Users,Account
 }
