@@ -4,11 +4,15 @@ const { Account, Users } = require("../db");
 const { default: mongoose } = require("mongoose");
 const accRouter=express.Router();
 
+accRouter.use(express.json())
 accRouter.get("/balance",authMiddleware,async(req,res)=>{
 
     const accDetails=await Account.findOne({
-        userId:req.userId
+        userId:req.userID
+
     })
+    
+    console.log(accDetails)
     res.json({
         balance:accDetails.balance
 
@@ -17,7 +21,9 @@ accRouter.get("/balance",authMiddleware,async(req,res)=>{
 
 })
 accRouter.post("/transfer",authMiddleware,async(req,res)=>{
+    console.log(req.body.to)
         const {to,amount}=req.body
+        
         const session=await mongoose.startSession();
         await session.startTransaction();
         const user2=await Account.findOne(
@@ -32,7 +38,7 @@ accRouter.post("/transfer",authMiddleware,async(req,res)=>{
         }
 
         const user1=await Account.findOne({userId:req.userID}).session(session)
-        if(!user1||!user1.balance>=amount){
+        if(!user1||user1.balance<amount){
             await session.abortTransaction();
            return  res.status(404).json({
            

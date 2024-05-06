@@ -16,5 +16,5 @@ app.use(express.json())
 
 
 app.listen(3001,()=>{
-    console.log("Server listening to 3000")
+    console.log("Server listening to 3001")
 });
