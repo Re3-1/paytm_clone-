@@ -1,7 +1,8 @@
 function Heading({header}){
 
-    return <div class="bg-white-700 text-4xl font-bold">
+    return <div className=" text-4xl font-extrabold pt-6">
        {header}
     </div>
     
     }
+    export default Heading

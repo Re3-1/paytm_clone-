@@ -24,6 +24,7 @@ const userSchema=zod.object({
 
 uRouter.post("/signup",async(req,res)=>{
     const loginInfo=req.body;
+    console.log(loginInfo)
     try{
     userSchema.parse(loginInfo)
 }catch(err){
@@ -72,7 +73,7 @@ const signinZod=zod.object({
 })
 
 
-uRouter.post("signin",async(req,res)=>{
+uRouter.post("/signin",async(req,res)=>{
     const {success}=signinZod.safeParse(req.body)
     if(!success){
         return res.status(411).json({
