@@ -6,6 +6,7 @@ import axios from "axios"
 import ButtonWarning from "../components/ButtonWarning"
 import {  useRecoilValue, useSetRecoilState } from "recoil"
 import {firstNameAtom ,lastNameAtom,usernameAtom,passwordAtom} from "../store/atoms/userInfo"
+import { useNavigate } from "react-router-dom"
 function Signup(){
 const setFirstName=useSetRecoilState(firstNameAtom);
 const setLastName=useSetRecoilState(lastNameAtom);
@@ -15,6 +16,7 @@ const firstname=useRecoilValue(firstNameAtom);
 const lastname=useRecoilValue(lastNameAtom);
 const username=useRecoilValue(usernameAtom);
 const password=useRecoilValue(passwordAtom);
+const navigate=useNavigate();
 return <div className="bg-slate-300 h-screen flex justify-center">
         <div className="flex justify-center  flex-col  ">
         <div className="bg-white text-center w-80 rounded-lg  shadow-md">
@@ -41,6 +43,8 @@ return <div className="bg-slate-300 h-screen flex justify-center">
                 })
 
                 localStorage.setItem("token",response.data.token)
+                navigate("/dashboard");
+                
         }}></Button>
         <ButtonWarning label="Sign In" word="Already have an account? " to="/signin"/>
                  </div>

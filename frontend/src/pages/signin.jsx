@@ -5,9 +5,12 @@ import axios from "axios"
 import Subheading from "../components/subHeading"
 import ButtonWarning from "../components/ButtonWarning"
 import { useRecoilState } from "recoil" 
+import { useNavigate } from "react-router-dom"
+
 import {usernameAtom ,passwordAtom} from "../store/atoms/userInfo"
 function Signin(){
 const [password,setPassword]=useRecoilState(passwordAtom);
+const navigate=useNavigate();
 const [username,setUsername]=useRecoilState(usernameAtom);
 return <div className="bg-slate-300 h-screen flex justify-center">
         <div className="flex justify-center  flex-col  ">
@@ -27,6 +30,7 @@ return <div className="bg-slate-300 h-screen flex justify-center">
                         password
                 })
                 localStorage.setItem("token",res.data.token)
+                navigate("/dashboard");
         }
     
         }></Button>

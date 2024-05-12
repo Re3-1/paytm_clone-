@@ -12,7 +12,7 @@ accRouter.get("/balance",authMiddleware,async(req,res)=>{
 
     })
     
-    console.log(accDetails)
+    
     res.json({
         balance:accDetails.balance
 
